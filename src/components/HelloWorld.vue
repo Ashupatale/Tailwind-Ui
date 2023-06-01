@@ -1,42 +1,187 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="grid grid-cols-3 h-screen">
+    <div class="col-span-1 bg-slate-300">First Part</div>
+    <div class="col-span-2 h-screen flex items-center p-30 pl-96">
+      <div class="w-full max-w-xs">
+        <form class="bg-white rounded  pt-6 pb-8 mb-4">
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2 text-start uppercase"
+              for="username"
+            >
+              cardholder name
+            </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="username"
+              type="text"
+              placeholder="e.g. Jane Appleased"
+              v-model="cardholderName"
+            />
+          </div>
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2 text-start uppercase"
+              for="username"
+            >
+              card number
+            </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="usernumber"
+              type="text"
+              placeholder="e.g. 1234 5678 9123 0000"
+              v-model="cardholderNumber"
+              
+            />
+          </div>
+
+          <div class="grid grid-cols-4 gap-2">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2 text-start col-span-1 uppercase mr-2"
+              for="username"
+            >
+              exp.date
+            </label>
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2 text-start col-span-1 uppercase"
+              for="username"
+            >
+              (mm/yy)
+            </label>
+
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2 text-start col-span-2 uppercase"
+              for="username"
+            >
+              CVC
+            </label>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2">
+            <input
+              type="text"
+              id="password"
+              placeholder="MM"
+              class="col-span-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              v-model="cardholderMonth"
+              />
+            <input
+              type="text"
+              id="password"
+              placeholder="YY"
+              class="col-span-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              v-model="cardholderYear"
+              />
+            <input
+              type="text"
+              id="password"
+              placeholder="e.g. 123"
+              class="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              v-model="cardholderCvv"
+              />
+          </div>
+        </form>
+        <div>
+          <button class="w-full rounded-md bg-purple-600 py-2 px-3 text-white">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Front content -->
+
+    <div class="absolute top-20 left-52">
+      <div
+        id="card"
+        class="relative w-96 h-60 rounded-2xl font-mono text-white overflow-hidden cursor-pointer transition-all duration-500"
+        
+      >
+        <!-- Front content -->
+        <div
+          class="absolute top-0 left-0 bottom-0 w-full h-full flex flex-col justify-center gap-6 p-6 bg-gradient-to-tr from-gray-900 to-gray-700 transition-all duration-100 delay-200 z-20"
+          
+        >
+          <div class="flex items-center ">
+            <div class="w-12 h-12 bg-white rounded-full mr-5"></div>
+
+            <div class="w-8 h-8 border-2 rounded-full"></div>
+
+
+           
+          </div>
+
+          <!-- CardNumber -->
+          <div class="">
+            <label for="" class="hidden">Card Number</label>
+            <span v-if="cardholderNumber.length"  class="outline-none w-full bg-transparent  text-3xl mt-10">{{ cardholderNumber }}</span>
+              <span v-else class="outline-none w-full bg-transparent  text-3xl mt-10">0000 0000 0000 0000</span>
+          </div>
+
+          <div class="w-full flex ">
+            <div class="w-full text-start ">
+             
+              <span v-if="cardholderName.length" class="uppercase text-start">{{ cardholderName }}</span>
+              <span v-else>JANE APPLESEED</span>
+
+            </div>
+
+            <div class="w-1/4 flex flex-col ">
+              <span v-if="cardholderMonth.length || cardholderYear.length" class="uppercase text-start">{{ cardholderMonth }}/{{ cardholderYear }}</span>
+              <span v-else>00/00</span>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back content -->
+
+    <div class="absolute top-2/4 left-80 mt-5">
+      <div
+        id="card"
+        class="relative w-96 h-60 rounded-2xl font-mono text-white overflow-hidden cursor-pointer"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-full justify-center bg-gradient-to-tr from-gray-100 to-gray-200"
+        >
+          <div class="w-full h-12 bg-slate-600 mt-5"></div>
+
+          <div class="h-8 bg-slate-400 mt-5 w-80 mx-auto rounded">
+            <span class="float-right pr-5 mt-1" v-if="cardholderCvv.length">{{ cardholderCvv }}</span>
+            <span v-else class="float-right pr-5 mt-1" >000</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
+<script lang="js">
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+  data(){
+    return {
+      
+      cardholderName:"",
+      cardholderNumber:"",
+      cardholderMonth:"",
+      cardholderYear:"",
+      cardholderCvv:""
+    }
+  },
+  filters: {
+    cardholderNumber(value){
+      return value ? value.match(/.{1,4}/g).join(' ') : '';
+    } 
+  },
+};
+var input = document.getElementById("usernumber");
+console.log(input)
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
