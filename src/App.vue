@@ -15,7 +15,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Space Grotesk', sans-serif;  
+  font-family: 'Space Grotesk', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
