@@ -122,6 +122,7 @@ Invalid input</pre
         </form>
         <div>
           <button
+            :disabled="disabled"
             class="w-full rounded-md bg-[#21092F] py-2 px-3 text-white"
             @click="SubmitForm"
           >
@@ -232,6 +233,7 @@ export default {
   },
   data(){
     return {
+      disabled:false,
       cardholderName:"",
       cardholderNumber:"",
       cardholderMonth:"",
@@ -265,7 +267,6 @@ export default {
 
         // Generate dashed number
         let dashedNumber = realNumber?.match(/.{1,4}/g,'')
-        console.log(dashedNumber)
 
         // Replace the dashed number with the real one
         this.cardholderNumber = dashedNumber?.join('-')
@@ -279,6 +280,9 @@ export default {
         if(this.cardholderNumber?.length < 18 ){
 
           this.WrongNum=true
+        }
+        else if(this.cardholderNumber?.length == 19){
+          this.disabled=false
         }
         else if(this.cardholderNumber == null){
           this.NumError =true
@@ -328,7 +332,13 @@ export default {
 
       },
     SubmitForm(){
-      console.log("outside",this.AnotherComp)
+      if(this.cardholderNumber?.length < 19){
+        this.disabled=true
+      }
+      else{
+        this.disabled=false
+      }
+
        if(this.cardholderMonth || this.cardholderYear || this.cardholderCvv || this.cardholderName||this.cardholderNumber){
         this.NumError=false;
         this.DateErr=false;
@@ -340,10 +350,9 @@ export default {
         this.AnotherComp=true
        },3000)
 
-        console.log("inside",this.AnotherComp)
 
       }
-      else if(this.cardholderName||this.cardholderNumber || this.cardholderMonth || this.cardholderYear || this.cardholderCvv == "" ){
+      else if(this.cardholderName||this.cardholderNumber || this.cardholderMonth || this.cardholderYear || this.cardholderCvv == "" || this.cardholderNumber?.length < 19 ){
         this.NumError=true
         this.DateErr=true
         this.NameError=true
