@@ -3,8 +3,11 @@
     <div class="col-span-1">
       <img src="@/assets/bg-main-desktop.png" />
     </div>
-    <div class="col-span-2 h-screen flex items-center p-30 pl-96" v-if="AnotherComp">
-      <Greetings/>
+    <div
+      class="col-span-2 h-screen flex items-center p-30 pl-96"
+      v-if="AnotherComp"
+    >
+      <Greetings />
     </div>
     <div class="col-span-2 h-screen flex items-center p-30 pl-96" v-else>
       <div class="w-full max-w-xs">
@@ -44,8 +47,13 @@
               pattern="[0-9]+"
               maxlength="19"
               placeholder="e.g. 1234 5678 9123 0000"
-                v-model="cardholderNumber"
+              v-model="cardholderNumber"
+              @input="InvalidString"
             />
+            <pre v-if="invalidInputString" style="color: #ff0000">
+Invalid input</pre
+            >
+
             <span class="text-start text-red-700" v-if="NumError"
               >Input feild cannot be empty</span
             >
@@ -53,7 +61,6 @@
             <span class="text-start text-red-700" v-if="WrongNum"
               >Card details are not valid</span
             >
-            
           </div>
 
           <div class="grid grid-cols-4 gap-2">
@@ -86,7 +93,7 @@
               maxlength="2"
               class="col-span-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               v-model="cardholderMonth"
-              @input="EnterDetails"
+              @input="InvalidDate"
             />
 
             <input
@@ -96,8 +103,7 @@
               maxlength="2"
               class="col-span-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               v-model="cardholderYear"
-              @input="EnterDetails"
-
+              @input="InvalidYear"
             />
 
             <input
@@ -107,8 +113,7 @@
               maxlength="3"
               class="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               v-model="cardholderCvv"
-              @input="EnterDetails"
-
+              @input="InvalidCvv"
             />
           </div>
           <span class="text-start text-red-700" v-if="DateErr"
@@ -120,13 +125,14 @@
             class="w-full rounded-md bg-[#21092F] py-2 px-3 text-white"
             @click="SubmitForm"
           >
-            Confirm
+            <span v-if="!Loader">Confirm</span>
+            <span v-if="Loader">
+              <i class="fa-solid fa-spinner fa-spin-pulse fa-spin-reverse"></i>
+            </span>
           </button>
         </div>
       </div>
     </div>
-
-   
 
     <!-- Front content -->
 
@@ -150,8 +156,8 @@
             <label for="" class="hidden">Card Number</label>
             <span
               v-if="cardholderNumber"
-              class="outline-none w-full bg-transparent text-3xl mt-10 text-start"
-              style="font-family: 'Space Grotesk', sans-serif;"
+              class="outline-none w-full bg-transparent mt-10 text-start"
+              style="font-family: 'Space Grotesk', sans-serif; font-size: 28px"
               >{{ cardholderNumber }}</span
             >
             <span
@@ -172,7 +178,7 @@
 
             <div class="w-1/4 flex flex-col">
               <span
-                v-if="cardholderMonth|| cardholderYear"
+                v-if="cardholderMonth || cardholderYear"
                 class="uppercase text-start"
                 >{{ cardholderMonth }}/{{ cardholderYear }}</span
               >
@@ -226,7 +232,6 @@ export default {
   },
   data(){
     return {
-
       cardholderName:"",
       cardholderNumber:"",
       cardholderMonth:"",
@@ -237,7 +242,9 @@ export default {
       WrongNum:false,
       DateErr:false,
       invalidInput: false,
-      AnotherComp:false
+      invalidInputString:false,
+      AnotherComp:false,
+      Loader:false
 
     }
   },
@@ -257,26 +264,27 @@ export default {
         let realNumber = this.cardholderNumber?.replace(/-/gi, '')
 
         // Generate dashed number
-        let dashedNumber = realNumber?.match(/.{1,4}/g)
+        let dashedNumber = realNumber?.match(/.{1,4}/g,'')
+        console.log(dashedNumber)
 
         // Replace the dashed number with the real one
         this.cardholderNumber = dashedNumber?.join('-')
-        
+
 
         if(this.cardholderNumber !== null ){
           this.NumError=false
           this.WrongNum=false
         }
-        
+
         if(this.cardholderNumber?.length < 18 ){
-          
+
           this.WrongNum=true
         }
         else if(this.cardholderNumber == null){
           this.NumError =true
         }
-       
-        
+
+
     }
 
 
@@ -284,11 +292,39 @@ export default {
 
   methods:{
     restrictSpecialChars() {
-          if (/[^A-Za-z0-9," "]/.test(this.cardholderName)) {
+          if (/[^A-Za-z," "]/.test(this.cardholderName)) {
             this.invalidInput = true;
           } else {
             this.invalidInput = false;
           }
+
+      },
+
+      InvalidString(event){
+        const input = event?.target?.value;
+      const cleanedInput = input?.replace(/[^0-9-]/g, '-');
+      this.cardholderNumber = cleanedInput;
+
+      },
+      InvalidDate(event){
+        const input = event?.target?.value;
+      const cleanedInput = input?.replace(/[^0-9-]/g, '0');
+      this.cardholderMonth = cleanedInput;
+
+
+      },
+      InvalidYear(event){
+        const input = event?.target?.value;
+      const cleanedInput = input?.replace(/[^0-9-]/g, '0');
+      this.cardholderYear = cleanedInput;
+
+
+      },
+      InvalidCvv(event){
+        const input = event?.target?.value;
+      const cleanedInput = input?.replace(/[^0-9-]/g, '0');
+      this.cardholderCvv = cleanedInput;
+
 
       },
     SubmitForm(){
@@ -299,7 +335,11 @@ export default {
         this.NameError=false;
       }
        if(this.cardholderMonth &&  this.cardholderYear &&  this.cardholderCvv &&  this.cardholderName && this.cardholderNumber !== ""){
+        this.Loader=true
+        setTimeout(()=>{
         this.AnotherComp=true
+       },3000)
+
         console.log("inside",this.AnotherComp)
 
       }
@@ -316,6 +356,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
+<style scoped></style>
