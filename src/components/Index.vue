@@ -224,7 +224,7 @@ Invalid input</pre
 <script lang="js">
 import Greetings from './Greetings.vue'
 export default {
-  name: "HelloWorld",
+  name: "index-vue",
   props: {
     msg: String,
   },
